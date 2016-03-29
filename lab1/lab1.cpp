@@ -1,3 +1,16 @@
+/* input:
+ * N, Sigma
+ * M, the number of edges
+ * M edges in format Qx Qy C
+ * Q0
+ * Cnt, the number of final states
+ * Cnt numbers, the final states
+ * W, a string to match
+ *
+ * Len, length of word to find that matches
+ */
+
+
 #include <iostream>
 #include <algorithm>
 #include <queue>

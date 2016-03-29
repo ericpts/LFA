@@ -1,3 +1,13 @@
+/** Input:
+ * N, Sigma, Q0
+ * M, the number of edges
+ * M edges of the form Qx Qy C
+ * C == L => Lambda
+ *
+ * F, the number of final states
+ * F number, the final states
+ *
+ */
 #include <bits/stdc++.h>
 
 using namespace std;
