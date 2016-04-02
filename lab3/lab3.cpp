@@ -26,7 +26,7 @@ struct node {
   }
 
   node* addTransition(char c, node* n) {
-    cerr << "connected " << q << " + " << c << " => " << n->q <<  "\n";
+   // cerr << "connected " << q << " + " << c << " => " << n->q <<  "\n";
     T.insert(make_pair(c, n));
     return n;
   }
@@ -56,7 +56,7 @@ pnn cycle(node* st, node* fin) {
 
 pnn concat() {
 
-  cerr << "entering concat\n";
+ // cerr << "entering concat\n";
 
   node* st = new node();
   node* now = st;
@@ -69,7 +69,7 @@ pnn concat() {
       now = next.second;
     } else 
     if(s[i] == ')') {
-      cerr << "ending concat because of )\n";
+     // cerr << "ending concat because of )\n";
       return end(st, now);
     } else
     if(std::isalpha(s[i])) {
@@ -77,7 +77,7 @@ pnn concat() {
       i++;
     } else
     if(s[i] == '|') {
-      cerr << "end concat because of |\n";
+     // cerr << "end concat because of |\n";
       return end(st, now);
     } else
     if(s[i] == '*') {
@@ -87,39 +87,39 @@ pnn concat() {
     }
   }
 
-  cerr << "end concat\n";
+ // cerr << "end concat\n";
   return end(st, now);
 }
 
 pnn parse() {
 //returns the start node and the end node
   std::vector<pnn> nxt;
-  cerr << "entering parse\n";
+ // cerr << "entering parse\n";
 
   while(i < s.length()) {
     if(s[i] == ')') {
-      cerr << "found )\n";
+     // cerr << "found )\n";
       i++;
       break;
     } else
     if(s[i] == '(') {
-      cerr << "found (\n";
+     // cerr << "found (\n";
       i++;
       nxt.push_back(parse());
     } else
     if(s[i] == '|') {
-      cerr << "found |\n";
+     // cerr << "found |\n";
       i++;
       nxt.push_back(concat());
     } else
     if(s[i] == '*') {
-      cerr << "found * in parse\n";
+     // cerr << "found * in parse\n";
       nxt.back().second->addTransition(lambda, nxt.back().first);
       nxt.back().second = nxt.back().first;
       i++;
     } else {
       pnn next = concat();
-      cerr << "extending nxt with concat\n";
+     // cerr << "extending nxt with concat\n";
       if(!nxt.empty()) {
         nxt.back().second->addTransition(lambda, next.first);
         nxt.back().second = next.second;
@@ -132,14 +132,14 @@ pnn parse() {
   node* st = new node();
   node* fin = new node();
 
-  cerr << "nxt has size " << nxt.size() << "\n";
+ // cerr << "nxt has size " << nxt.size() << "\n";
 
   for(auto i: nxt) {
     st->addTransition(lambda, i.first);
     i.second->addTransition(lambda, fin);
   }
 
-  cerr << "return from parse\n";
+ // cerr << "return from parse\n";
 
   return make_pair(st, fin);
 }
