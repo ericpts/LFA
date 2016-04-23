@@ -12,7 +12,7 @@ using std::string;
 using std::pair;
 using std::make_pair;
 
-const char lambda = 'L';
+const char lambda = '#';
 
 
 struct node {
@@ -146,10 +146,29 @@ pnn parse() {
 
 std::unordered_set<int> visited;
 
+int fin;
+
+struct edge {
+  int a, b;
+  char c;
+
+  edge() = delete;
+
+  edge(int aa, char cc, int bb):
+    a(aa),
+    b(bb),
+    c(cc) {
+    }
+};
+
+int mmap[100];
+
+std::vector<edge> edges;
+
 void show(node* st) {
   visited.insert(st->q);
   for(auto i: st->T) {
-    std::cout << st->q << " + " << i.first << " => " << i.second->q << "\n";
+    edges.emplace_back(st->q, i.first, i.second->q);
   }
   for(auto i: st->T) {
     if(!visited.count(i.second->q)) {
@@ -161,7 +180,22 @@ void show(node* st) {
 int main() {
   std::cin >> s;
   pnn automat = parse();
+
+  fin = automat.first->q;
   show(automat.first);
-  std::cout << "start => " << automat.first->q << "\nfinal => " << automat.second->q << "\n";
+
+  for(int i = 0; i < node::qAt; ++i)
+    mmap[i] = i;
+
+  mmap[fin] = 0;
+  mmap[0] = fin;
+
+  std::cout << node::qAt << "\n";
+  std::cout << 0 << "\n";
+  std::cout << edges.size() << "\n";
+  for(auto &i: edges) {
+    std::cout << mmap[i.a] << " " << mmap[i.b] << " " << i.c << "\n";
+  }
+  std::cout << "1\n" << automat.second->q << "\n";
   return 0;
 }
