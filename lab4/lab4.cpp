@@ -5,16 +5,24 @@
 
 using namespace std;
 
-typedef string regex;
+#define DEBUG
 
-const regex lambda = "#";
+#ifdef DEBUG
+#define DEBUG_TEST 1
+#else
+#define DEBUG_TEST 0
+#endif
+
+#define debug(...) if(DEBUG_TEST)fprintf(stderr, __VA_ARGS__)
+
+const string lambda = "#";
 
 const int MAX_N = 100;
 
 int n;
 
-regex A[MAX_N][MAX_N];
-regex B[MAX_N];
+string A[MAX_N][MAX_N];
+string B[MAX_N];
 
 string concat(string a, string b) {
 	if(a.empty() || b.empty())
@@ -46,6 +54,8 @@ void norm(int x) {
 		A[x][i] = concat("(" + A[x][x] + ")*", A[x][i]);
 	}
 
+  B[x] = concat("(" + A[x][x] + ")*", B[x]);
+
 
 	A[x][x].clear();
 }
@@ -73,7 +83,23 @@ string add(string s, string b) {
 	return "(" + s + "|" + b + ")";
 } 
 
+void dbg() {
+  for(int i = 0; i < n; ++i) {
+    debug("B[%d] = %s\n", i, B[i].c_str());
+  }
+  debug("\n");
+
+  for(int i = 0; i < n; ++i) {
+    for(int j = 0; j < n; ++j) {
+      debug("A[%d][%d] = %s\n", i, j, A[i][j].c_str());
+    } 
+  }
+
+  debug("\n\n\n");
+}
+
 void mul(int dest, int src) {
+
 	B[dest] = add(B[dest], concat(A[dest][src], B[src]));
 	for(int i = 0; i < src; ++i) {
 		A[dest][i] = add(A[dest][i], concat(A[dest][src], A[src][i]));
@@ -105,13 +131,26 @@ int main() {
 		addFin(q);
 	}
 
-	for(int i = n - 1; i > 0; --i) {
+	for(int i = n - 1; i > 0; --i, --n) {
 	//one by one,
 	//disolve the states
+
+    debug("Disolving by %d\n", i);
 		norm(i);
+    dbg();
+
+    debug("Merging states\n");
+
 		for(int j = i - 1; j >= 0; --j) 
 			mul(j, i);
+    dbg();
 	}
+
+  norm(0);
+
+  dbg();
+
+  cout << B[0] << "\n";
 
 	return 0;
 }
